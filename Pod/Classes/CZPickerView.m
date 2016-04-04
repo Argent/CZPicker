@@ -289,6 +289,7 @@ typedef void (^CZDismissCompletionCallback)(void);
         NSIndexPath *ip = [NSIndexPath indexPathForRow:[n integerValue] inSection: 0];
         [self.selectedIndexPaths addObject:ip];
     }
+    [self.tableView reloadData];
 }
 
 #pragma mark - UITableViewDataSource
@@ -337,7 +338,7 @@ typedef void (^CZDismissCompletionCallback)(void);
         self.selectedIndexPaths = [NSMutableArray new];
     }
     // the row has already been selected
-    
+    BOOL dismiss = NO;
     if (self.allowMultipleSelection){
         
         if([self.selectedIndexPaths containsObject:indexPath]){
@@ -368,10 +369,18 @@ typedef void (^CZDismissCompletionCallback)(void);
         }
         
         if(!self.needFooterView && [self.delegate respondsToSelector:@selector(czpickerView:didConfirmWithItemAtRow:)]){
-            [self dismissPicker:^{
-                [self.delegate czpickerView:self didConfirmWithItemAtRow:indexPath.row];
-            }];
+            dismiss = YES;
         }
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(czpickerView:selectionChanged:)]){
+        [self.delegate czpickerView:self selectionChanged:self.selectedRows];
+    }
+    
+    if (dismiss) {
+        [self dismissPicker:^{
+            [self.delegate czpickerView:self didConfirmWithItemAtRow:indexPath.row];
+        }];
     }
     
 }

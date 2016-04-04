@@ -53,6 +53,9 @@
 
 /** delegate method for canceling */
 - (void)czpickerViewDidClickCancelButton:(CZPickerView *)pickerView;
+
+/** delegate method for when selected items changed */
+- (void)czpickerView:(CZPickerView *)pickerView selectionChanged:(NSArray *)selectedRows;
 @end
 
 @interface CZPickerView : UIView<UITableViewDataSource, UITableViewDelegate>
